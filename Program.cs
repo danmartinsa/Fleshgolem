@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Runtime.CompilerServices;
 using Fleshgolem.Data;
-using Fleshgolem.Entity;
+using Fleshgolem.Entities;
 using Fleshgolem.Ruleset;
 
 class Program
@@ -18,7 +18,7 @@ class Program
             BodyPart bodyPart = new(
                 (string)row["Name"],
                 (BodyParts)row["Part"],
-                new BaseAttributes((int)row["Strength"], (int)row["Size"], (int)row["Dexterity"]),
+                new BaseAttributes((int)row["Strength"], (int)row["Constitution"], (int)row["Size"], (int)row["Dexterity"]),
                 (Guid)row["Id"]
             );
             Limb limb = new(bodyPart);
@@ -28,18 +28,18 @@ class Program
         return player;
     }
 
-    static Entity CreateEnemy()
+    static Entity CreateEnemy(string name)
     {
         DataTable PartData = GameData.PopulateData();
         DataRow[] filteredRows = PartData.Select("Animal = 'human'");
-        var enemy = new Entity("Human");
+        var enemy = new Entity(name);
 
         foreach (DataRow row in filteredRows)
         {
             BodyPart bodyPart = new(
                 (string)row["Name"],
                 (BodyParts)row["Part"],
-                new BaseAttributes((int)row["Strength"], (int)row["Size"], (int)row["Dexterity"]),
+                new BaseAttributes((int)row["Strength"], (int)row["Constitution"], (int)row["Size"], (int)row["Dexterity"]),
                 (Guid)row["Id"]
             );
             Limb limb = new(bodyPart);
@@ -51,28 +51,50 @@ class Program
     static void Main(string[] args)
     {
         Entity player = CreatePlayer();
-        Console.WriteLine($"Player Name: {player.Name}");
-        Console.WriteLine($"Head: {player.Head.BodyPart.Name}, Strength: {player.Head.BodyPart.Attributes.Strength}, Size: {player.Head.BodyPart.Attributes.Size}, Dexterity: {player.Head.BodyPart.Attributes.Dexterity}");
-        Console.WriteLine($"Chest: {player.Chest.BodyPart.Name}, Strength: {player.Chest.BodyPart.Attributes.Strength}, Size: {player.Chest.BodyPart.Attributes.Size}, Dexterity: {player.Chest.BodyPart.Attributes.Dexterity}");
-        Console.WriteLine($"Abdomen: {player.Abdomen.BodyPart.Name}, Strength: {player.Abdomen.BodyPart.Attributes.Strength}, Size: {player.Abdomen.BodyPart.Attributes.Size}, Dexterity: {player.Abdomen.BodyPart.Attributes.Dexterity}");
-        Console.WriteLine($"Left Arm: {player.LeftArm.BodyPart.Name}, Strength: {player.LeftArm.BodyPart.Attributes.Strength}, Size: {player.LeftArm.BodyPart.Attributes.Size}, Dexterity: {player.LeftArm.BodyPart.Attributes.Dexterity}");
-        Console.WriteLine($"Right Arm: {player.RightArm.BodyPart.Name}, Strength: {player.RightArm.BodyPart.Attributes.Strength}, Size: {player.RightArm.BodyPart.Attributes.Size}, Dexterity: {player.RightArm.BodyPart.Attributes.Dexterity}");
-        Console.WriteLine($"Left Leg: {player.LeftLeg.BodyPart.Name}, Strength: {player.LeftLeg.BodyPart.Attributes.Strength}, Size: {player.LeftLeg.BodyPart.Attributes.Size}, Dexterity: {player.LeftLeg.BodyPart.Attributes.Dexterity}");
-        Console.WriteLine($"Right Leg: {player.RightLeg.BodyPart.Name}, Strength: {player.RightLeg.BodyPart.Attributes.Strength}, Size: {player.RightLeg.BodyPart.Attributes.Size}, Dexterity: {player.RightLeg.BodyPart.Attributes.Dexterity}");
-        Console.WriteLine($"Tail: {player.Tail.BodyPart.Name}, Strength: {player.Tail.BodyPart.Attributes.Strength}, Size: {player.Tail.BodyPart.Attributes.Size}, Dexterity: {player.Tail.BodyPart.Attributes.Dexterity}");
+        Entity enemy1 = CreateEnemy("Human 1");
+        Entity enemy2 = CreateEnemy("Human 2");
 
-        player.DetachLimb(BodyParts.Tail);
-        Console.WriteLine($"Tail: {player.Tail.BodyPart.Name}, Strength: {player.Tail.BodyPart.Attributes.Strength}, Size: {player.Tail.BodyPart.Attributes.Size}, Dexterity: {player.Tail.BodyPart.Attributes.Dexterity}");
+        player.InitializeHP();
+        enemy1.InitializeHP();
+        enemy2.InitializeHP();
 
-        Entity enemy = CreateEnemy();
-        Console.WriteLine($"Enemy Name: {enemy.Name}");
-        Console.WriteLine($"Head: {enemy.Head.BodyPart.Name}, Strength: {enemy.Head.BodyPart.Attributes.Strength}, Size: {enemy.Head.BodyPart.Attributes.Size}, Dexterity: {enemy.Head.BodyPart.Attributes.Dexterity}");
-        Console.WriteLine($"Chest: {enemy.Chest.BodyPart.Name}, Strength: {enemy.Chest.BodyPart.Attributes.Strength}, Size: {enemy.Chest.BodyPart.Attributes.Size}, Dexterity: {enemy.Chest.BodyPart.Attributes.Dexterity}");
-        Console.WriteLine($"Abdomen: {enemy.Abdomen.BodyPart.Name}, Strength: {enemy.Abdomen.BodyPart.Attributes.Strength}, Size: {enemy.Abdomen.BodyPart.Attributes.Size}, Dexterity: {enemy.Abdomen.BodyPart.Attributes.Dexterity}");
-        Console.WriteLine($"Left Arm: {enemy.LeftArm.BodyPart.Name}, Strength: {enemy.LeftArm.BodyPart.Attributes.Strength}, Size: {enemy.LeftArm.BodyPart.Attributes.Size}, Dexterity: {enemy.LeftArm.BodyPart.Attributes.Dexterity}");
-        Console.WriteLine($"Right Arm: {enemy.RightArm.BodyPart.Name}, Strength: {enemy.RightArm.BodyPart.Attributes.Strength}, Size: {enemy.RightArm.BodyPart.Attributes.Size}, Dexterity: {enemy.RightArm.BodyPart.Attributes.Dexterity}");
-        Console.WriteLine($"Left Leg: {enemy.LeftLeg.BodyPart.Name}, Strength: {enemy.LeftLeg.BodyPart.Attributes.Strength}, Size: {enemy.LeftLeg.BodyPart.Attributes.Size}, Dexterity: {enemy.LeftLeg.BodyPart.Attributes.Dexterity}");
-        Console.WriteLine($"Tail: {enemy.Tail.BodyPart.Name}, Strength: {enemy.Tail.BodyPart.Attributes.Strength}, Size: {enemy.Tail.BodyPart.Attributes.Size}, Dexterity: {enemy.Tail.BodyPart.Attributes.Dexterity}");
+        // Place combatants: player at origin, enemy1 close (within reach), enemy2 further away.
+        var playerP = new CombatParticipant(player, new Position(0, 0));
+        var enemy1P = new CombatParticipant(enemy1, new Position(2, 0));
+        var enemy2P = new CombatParticipant(enemy2, new Position(6, 0));
 
+        float reach = Combat.AttackReach(player);
+        Console.WriteLine("=== Combat Setup ===");
+        Console.WriteLine($"{player.Name} — reach: {reach} units | Skill:{Combat.CombatSkill(player)} AP:{Combat.ActionPoints(player)}");
+        Console.WriteLine($"  {enemy1.Name} at distance {playerP.Position.DistanceTo(enemy1P.Position):F1} — {(reach >= playerP.Position.DistanceTo(enemy1P.Position) ? "IN REACH" : "OUT OF REACH")}");
+        Console.WriteLine($"  {enemy2.Name} at distance {playerP.Position.DistanceTo(enemy2P.Position):F1} — {(reach >= playerP.Position.DistanceTo(enemy2P.Position) ? "IN REACH" : "OUT OF REACH")}");
+        Console.WriteLine();
+
+        var results = Combat.CombatRound(playerP, [enemy1P, enemy2P]);
+
+        Console.WriteLine("=== Combat Round ===");
+        foreach (var (target, r) in results)
+        {
+            if (r.Result is CombatResult.Miss or CombatResult.Fumble)
+            {
+                Console.WriteLine($"  vs {target.Entity.Name}: [{r.Result}] — no damage");
+                continue;
+            }
+            Console.WriteLine($"  vs {target.Entity.Name}: [{r.Result}] Hit:{r.HitLocation,-10} | Raw:{r.RawDamage,3}  Armor:{r.ArmorMitigation,2}  Final:{r.FinalDamage,3}  Wound:{r.WoundCaused}{(r.LimbMaimed ? " — LIMB MAIMED" : "")}{(r.Fatal ? " — FATAL" : "")}");
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("=== Round End ===");
+        Console.WriteLine($"{player.Name} incapacitated: {Combat.IsIncapacitated(player)}");
+        Console.WriteLine($"{enemy1.Name} incapacitated: {Combat.IsIncapacitated(enemy1)}");
+        Console.WriteLine($"{enemy2.Name} incapacitated: {Combat.IsIncapacitated(enemy2)}");
+
+        foreach (var (entity, name) in new[] { (player, player.Name), (enemy1, enemy1.Name), (enemy2, enemy2.Name) })
+        {
+            var maimed = Combat.MaimedLimbs(entity).ToList();
+            if (maimed.Count > 0)
+                Console.WriteLine($"{name} maimed limbs: {string.Join(", ", maimed)}");
+
+        }
     }
 }
