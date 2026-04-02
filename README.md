@@ -10,6 +10,10 @@ Fleshgolem is a C# based game engine/prototype focused on the creation and manag
 - **Data-Driven Parts**: Body parts are populated from a data-driven structure, allowing for different creature types (e.g., Manticore, Human).
 - **Ruleset Integration**: Includes a basic ruleset with common RPG attributes and dice definitions.
 
+## Ruleset
+
+The game ruleset is loosely based on [Mythras Imperative RPG](https://www.drivethrurpg.com/product/185335/Mythras-Imperative), providing a foundation for character attributes and dice mechanics.
+
 ## Project Structure
 
 - `Program.cs`: The entry point of the application, demonstrating entity creation and limb management.
