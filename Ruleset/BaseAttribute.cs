@@ -22,12 +22,6 @@ public enum BodyParts
     Tail,
 }
 
-// public class Attribute(Attributes attr)
-// {
-//     public Attributes Type { get; set; } = attr;
-//     public int Value { get; set; } =
-// }
-
 public class BaseAttributes(int str, int sz, int dex)
 {
     public int Strength { get; set; } = str;
